@@ -6,18 +6,24 @@ import subprocess
 from pathlib import Path
 
 def get_last_modified():
-    files = ["retag_gui.py", "retag_lib.py"]
+    files = [
+        "src/retagger/gui.py",
+        "src/retagger/core.py",
+        "src/retagger/__main__.py"
+    ]
     return max(os.path.getmtime(f) for f in files if os.path.exists(f))
 
 def main():
-    script_path = "retag_gui.py"
+    script_path = "src/retagger/gui.py"
     python_bin = "./venv/bin/python"
     
     print(f"🚀 Starting Hot Reload for {script_path}")
-    print("Watching for changes in retag_gui.py and retag_lib.py...")
+    print("Watching for changes in src/retagger/...")
     
     last_mtime = get_last_modified()
-    process = subprocess.Popen([python_bin, script_path])
+    env = os.environ.copy()
+    env["PYTHONPATH"] = "src"
+    process = subprocess.Popen([python_bin, script_path], env=env)
     
     try:
         while True:
@@ -28,7 +34,7 @@ def main():
                 print("\n🔄 Change detected! Restarting...")
                 process.terminate()
                 process.wait()
-                process = subprocess.Popen([python_bin, script_path])
+                process = subprocess.Popen([python_bin, script_path], env=env)
                 last_mtime = current_mtime
     except KeyboardInterrupt:
         print("\n👋 Stopping preview...")
