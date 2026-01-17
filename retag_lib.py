@@ -148,10 +148,12 @@ def unique_keep_order(items: list[str]) -> list[str]:
     return out
 
 
-def get_mp3_files(root: Path) -> List[Path]:
+def get_mp3_files(root: Path, recursive: bool = True) -> List[Path]:
     if not root.exists():
         return []
-    return sorted(root.rglob("*.mp3"))
+    if recursive:
+        return sorted(root.rglob("*.mp3"))
+    return sorted(root.glob("*.mp3"))
 
 
 def process_file(path: Path, config: RetagConfig) -> Optional[ChangeResult]:
