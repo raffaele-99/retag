@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retagger"
+version = "1.0.0"
+description = "retags MP3 files from deemix by moving featured artists from the artist tag to the title tag"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mutagen",
+    "customtkinter",
+]
+
+[project.scripts]
+retagger = "retagger.__main__:main"
+retagger-gui = "retagger.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
