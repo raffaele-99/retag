@@ -200,6 +200,9 @@ def process_file(path: Path, config: RetagConfig) -> Optional[ChangeResult]:
 
     title = (tags.get("title", [path.stem])[0] or path.stem).strip()
 
+    main_artist = pick_main_artist(tags, artists).strip()
+    if not main_artist:
+        return None
     featured = detect_features(artists, main_artist)
 
     # Drop featured artists who are credited as remixers in the title
