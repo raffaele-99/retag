@@ -111,6 +111,9 @@ def clean_title_remixer_features(title: str) -> str:
         if not looks_like_remixer_in_title(title, artist):
             cleaned_artists.append(artist)
             
+    # Remove duplicates
+    cleaned_artists = unique_keep_order(cleaned_artists)
+            
     if not cleaned_artists:
         # Remove the whole block
         # We also need to clean up any double spaces that might result
@@ -148,6 +151,22 @@ def unique_keep_order(items: list[str]) -> list[str]:
     return out
 
 
+def detect_features(artists: list[str], main_artist: str) -> list[str]:
+    # Featured = everyone except main
+    # We also filter out any individual artist that is part of the main artist string
+    # e.g. if Main is "JAY-Z, Kanye West", then "JAY-Z" and "Kanye West" are NOT features.
+    
+    main_artist_parts = [norm(p.strip()) for p in re.split(r",\s*|\s+&\s+|\s+and\s+|/", main_artist) if p.strip()]
+    
+    featured = []
+    for a in artists:
+        norm_a = norm(a)
+        if norm_a != norm(main_artist) and norm_a not in main_artist_parts:
+            featured.append(a)
+            
+    return unique_keep_order(featured)
+
+
 def get_mp3_files(root: Path, recursive: bool = True) -> List[Path]:
     if not root.exists():
         return []
@@ -181,13 +200,7 @@ def process_file(path: Path, config: RetagConfig) -> Optional[ChangeResult]:
 
     title = (tags.get("title", [path.stem])[0] or path.stem).strip()
 
-    main_artist = pick_main_artist(tags, artists).strip()
-    if not main_artist:
-        return None
-
-    # Featured = everyone except main
-    featured = [a for a in artists if norm(a) != norm(main_artist)]
-    featured = unique_keep_order(featured)
+    featured = detect_features(artists, main_artist)
 
     # Drop featured artists who are credited as remixers in the title
     featured = [a for a in featured if not looks_like_remixer_in_title(title, a)]
