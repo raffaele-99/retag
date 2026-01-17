@@ -5,12 +5,7 @@ import argparse
 import sys
 from pathlib import Path
 
-try:
-    import retag_lib
-except ImportError:
-    # Handle the case where the script is run directly and retag_lib is in the same directory but not installed
-    sys.path.append(str(Path(__file__).parent))
-    import retag_lib
+from . import core
 
 
 def main() -> int:
@@ -34,12 +29,12 @@ def main() -> int:
         print(f"Path not found: {root}")
         return 1
 
-    mp3s = retag_lib.get_mp3_files(root)
+    mp3s = core.get_mp3_files(root)
     if not mp3s:
         print("No mp3 files found.")
         return 0
 
-    config = retag_lib.RetagConfig(
+    config = core.RetagConfig(
         delimiter=args.delimiter,
         write=args.write,
         set_albumartist=args.set_albumartist,
@@ -48,7 +43,7 @@ def main() -> int:
     changed_count = 0
 
     for p in mp3s:
-        result = retag_lib.process_file(p, config)
+        result = core.process_file(p, config)
 
         if result:
             if result.error:

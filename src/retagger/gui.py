@@ -220,10 +220,10 @@ class RetagApp(ctk.CTk):
 
     def _process_thread(self, root_path):
         # import here for faster app startup
-        import retag_lib
+        from . import core
         
         try:
-            mp3s = retag_lib.get_mp3_files(root_path, recursive=self.scan_subfolders_var.get())
+            mp3s = core.get_mp3_files(root_path, recursive=self.scan_subfolders_var.get())
             if not mp3s:
                 self._log(f"no .mp3 files found in target directory")
                 if not self.scan_subfolders_var.get():
@@ -231,7 +231,7 @@ class RetagApp(ctk.CTk):
                 self._finish_processing()
                 return
 
-            config = retag_lib.RetagConfig(
+            config = core.RetagConfig(
                 delimiter=self.delimiter_var.get(),
                 write=self.write_changes_var.get(),
                 set_albumartist=self.set_album_artist_var.get(),
@@ -248,7 +248,7 @@ class RetagApp(ctk.CTk):
                     
                 scanned_count += 1
                 try:
-                    result = retag_lib.process_file(p, config)
+                    result = core.process_file(p, config)
                     
                     if result:
                         if result.error:
