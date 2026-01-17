@@ -16,9 +16,9 @@ hidden_imports = collect_submodules('customtkinter')
 
 # Platform-specific settings
 if sys.platform == 'darwin':
-    icon_path = 'assets/icon.icns' if os.path.exists('assets/icon.icns') else None
+    icon_path = 'src/retagger/assets/icon.icns' if os.path.exists('src/retagger/assets/icon.icns') else None
 elif sys.platform == 'win32':
-    icon_path = 'assets/icon.ico' if os.path.exists('assets/icon.ico') else None
+    icon_path = 'src/retagger/assets/icon.ico' if os.path.exists('src/retagger/assets/icon.ico') else None
 else:
     icon_path = None
 

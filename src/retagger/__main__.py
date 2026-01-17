@@ -5,7 +5,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import core
+from retagger import core
 
 
 def main() -> int:

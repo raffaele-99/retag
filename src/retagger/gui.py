@@ -220,7 +220,7 @@ class RetagApp(ctk.CTk):
 
     def _process_thread(self, root_path):
         # import here for faster app startup
-        from . import core
+        from retagger import core
         
         try:
             mp3s = core.get_mp3_files(root_path, recursive=self.scan_subfolders_var.get())
