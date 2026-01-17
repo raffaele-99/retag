@@ -76,6 +76,57 @@ def looks_like_remixer_in_title(title: str, artist_name: str) -> bool:
     return a in window
 
 
+def clean_title_remixer_features(title: str) -> str:
+    match = FEAT_IN_TITLE_RE.search(title)
+    if not match:
+        return title
+
+    full_match = match.group(0)
+    # Extract content inside parens, removing the "feat." prefix
+    # FEAT_IN_TITLE_RE matches "(feat. ...)"
+    # We strip delimiters () and split
+    
+    # Kind regarding the delimiters, we just take everything between first ( and last )
+    # This assumes FEAT_IN_TITLE_RE is just one group of parens.
+    content = full_match[1:-1]
+    
+    # Remove the prefix (ft., feat., featuring)
+    prefix_match = re.match(r"(?:ft\.|feat\.|featuring)\s+", content, re.IGNORECASE)
+    if not prefix_match:
+        # Should match given the regex, but safety first
+        return title
+        
+    prefix = prefix_match.group(0)
+    artists_str = content[len(prefix):]
+    
+    # Split artists
+    # delimiters: comma, &, and
+    raw_artists = re.split(r",\s*|\s+&\s+|\s+and\s+", artists_str)
+    raw_artists = [a.strip() for a in raw_artists if a.strip()]
+    
+    # Filter out remixers
+    cleaned_artists = []
+    
+    for artist in raw_artists:
+        if not looks_like_remixer_in_title(title, artist):
+            cleaned_artists.append(artist)
+            
+    if not cleaned_artists:
+        # Remove the whole block
+        # We also need to clean up any double spaces that might result
+        new_title = title.replace(full_match, "").strip()
+        return new_title
+    
+    if len(cleaned_artists) == len(raw_artists):
+        return title
+        
+    # Reconstruct
+    new_artists_str = ", ".join(cleaned_artists) 
+    new_tag = f"({prefix}{new_artists_str})"
+    new_title = title.replace(full_match, new_tag)
+    return new_title
+
+
 def pick_main_artist(tags: EasyID3, artists: list[str]) -> str:
     # Prefer albumartist/band when present (common for albums where Artist includes remixers, etc.)
     for key in ("albumartist", "band"):
@@ -144,6 +195,9 @@ def process_file(path: Path, config: RetagConfig) -> Optional[ChangeResult]:
 
     if featured and not has_feat_in_title(title):
         new_title = f"{title} (ft. {', '.join(featured)})"
+
+    if has_feat_in_title(new_title):
+        new_title = clean_title_remixer_features(new_title)
 
     # If no featured left after filtering, still normalize Artist to main.
     would_change = (new_artist != artist_raw) or (new_title != title)
