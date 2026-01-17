@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "retagger"
-version = "1.0.0"
+version = "1.0.1"
 description = "retags MP3 files from deemix by moving featured artists from the artist tag to the title tag"
 readme = "README.md"
 requires-python = ">=3.12"
