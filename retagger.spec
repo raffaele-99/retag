@@ -23,8 +23,8 @@ else:
     icon_path = None
 
 a = Analysis(
-    ['retag_gui.py'],
-    pathex=[],
+    ['src/retagger/gui.py'],
+    pathex=['src'],
     binaries=[],
     datas=ctk_datas,
     hiddenimports=hidden_imports,
