@@ -26,8 +26,6 @@ This project aims to provide a simple way to fix this issue by accepting .mp3 fi
 
 ## Issues
 
-- The script, while fully functional, is a single CLI script. I suspect the script may need refactoring into separate files: one for the logic/core library, one for the CLI that calls the library, and one for the GUI that calls the library.
-
 - It is not particularly intuitive to have to open a terminal and run a script every time I download more music. I would like to make it easier for my friends and family to switch to downloading MP3s, and telling them to download python + set up their terminal is not really user-friendly.
 
 ## Logic checks
