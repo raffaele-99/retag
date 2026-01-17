@@ -145,7 +145,7 @@ class RetagApp(ctk.CTk):
         
         ctk.CTkCheckBox(options_subframe, text="Scan Subfolders", variable=self.scan_subfolders_var).grid(row=1, column=1, padx=5, pady=10, sticky="w")
 
-        self.write_mode_switch = ctk.CTkSwitch(options_subframe, text="Write Mode (DANGEROUS)", variable=self.write_changes_var, progress_color="#ff4b4b")
+        self.write_mode_switch = ctk.CTkSwitch(options_subframe, text="Write Changes", variable=self.write_changes_var, progress_color="#ff4b4b")
         self.write_mode_switch.grid(row=1, column=2, padx=20, pady=10, sticky="w")
 
         # Action Button
