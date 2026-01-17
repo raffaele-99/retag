@@ -8,7 +8,6 @@ import threading
 import sys
 from pathlib import Path
 import queue
-import retag_lib
 
 # Configuration Setup
 APP_NAME = "retagger"
@@ -211,15 +210,18 @@ class RetagApp(ctk.CTk):
         self.log_area.delete("0.0", tk.END)
         
         mode_str = "WRITE MODE" if self.write_changes_var.get() else "DRY RUN"
-        self._log(f"[START] Starting scan in {mode_str}...")
+        self._log(f"[START] starting scan in {mode_str}...")
         self._log(f"  Target: {root_path}")
         self._log("-" * 50)
 
-        # Run in a separate thread to keep UI responsive
+        # run in separate thread to keep UI responsive
         thread = threading.Thread(target=self._process_thread, args=(root_path,))
         thread.start()
 
     def _process_thread(self, root_path):
+        # import here for faster app startup
+        import retag_lib
+        
         try:
             mp3s = retag_lib.get_mp3_files(root_path, recursive=self.scan_subfolders_var.get())
             if not mp3s:
@@ -241,7 +243,7 @@ class RetagApp(ctk.CTk):
 
             for p in mp3s:
                 if self.stop_requested:
-                    self._log("\n🛑 Stop requested by user.")
+                    self._log("\n[STOP] stop requested by user")
                     break
                     
                 scanned_count += 1
@@ -261,8 +263,8 @@ class RetagApp(ctk.CTk):
                      self._log(f"[ERROR] {p.name}: {e}")
 
             self._log("-" * 50)
-            self._log(f"[DONE] Scanned {scanned_count} files")
-            self._log(f"  Files matched/updated: {changed_count}")
+            self._log(f"[DONE] scanned {scanned_count} files")
+            self._log(f"  files matched/updated: {changed_count}")
 
         except Exception as e:
             self._log(f"[FATAL] {e}")
