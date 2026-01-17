@@ -1,6 +1,0 @@
-# Runtime dependencies
-customtkinter>=5.2.0
-mutagen>=1.47.0
-
-# Build dependencies (dev)
-pyinstaller>=6.0.0

@@ -13,6 +13,12 @@ dependencies = [
     "customtkinter",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pyinstaller>=6.0.0",
+]
+
+
 [project.scripts]
 retagger = "retagger.__main__:main"
 retagger-gui = "retagger.gui:main"

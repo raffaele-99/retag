@@ -20,7 +20,7 @@ fi
 
 # Install dependencies
 echo "Installing dependencies..."
-pip install -r requirements.txt
+pip install ".[dev]"
 
 # Clean previous builds
 echo "Cleaning previous builds..."

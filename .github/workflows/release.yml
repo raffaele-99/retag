@@ -38,7 +38,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install .
+        run: pip install ".[dev]"
 
       - name: Build executable
         run: pyinstaller retagger.spec --clean
